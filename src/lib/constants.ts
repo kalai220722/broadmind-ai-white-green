@@ -1,0 +1,164 @@
+import {
+  Bot,
+  Code,
+  Camera,
+  BarChart3,
+  FileText,
+  MessageSquare,
+  BookOpen,
+  Stethoscope,
+  Cpu,
+  GraduationCap,
+  type LucideIcon,
+} from "lucide-react";
+
+export interface Module {
+  id: string;
+  name: string;
+  shortName: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
+  gradient: string;
+  href: string;
+  difficulty: string;
+  features: string[];
+}
+
+export const MODULES: Module[] = [
+  {
+    id: "avatar-tutor",
+    name: "Avatar Tutor",
+    shortName: "Avatar",
+    description: "Digital teacher in 22+ languages with realistic avatar delivery",
+    icon: Bot,
+    color: "#8B5CF6",
+    gradient: "from-violet-500 to-purple-600",
+    href: "/modules/avatar-tutor",
+    difficulty: "MEDIUM",
+    features: ["22+ Languages", "Pre-rendered Videos", "Emotion Detection", "Adaptive Teaching"],
+  },
+  {
+    id: "code-builder",
+    name: "Code Builder",
+    shortName: "Code",
+    description: "Browser IDE with AI pair programmer and 60+ language support",
+    icon: Code,
+    color: "#06B6D4",
+    gradient: "from-cyan-500 to-blue-600",
+    href: "/modules/code-builder",
+    difficulty: "MEDIUM",
+    features: ["Monaco Editor", "60+ Languages", "Auto-grading", "AI Debugging"],
+  },
+  {
+    id: "doubt-solver",
+    name: "Doubt Solver",
+    shortName: "Doubts",
+    description: "Snap a photo of any problem and get an instant step-by-step solution",
+    icon: Camera,
+    color: "#10B981",
+    gradient: "from-emerald-500 to-green-600",
+    href: "/modules/doubt-solver",
+    difficulty: "EASY",
+    features: ["Photo OCR", "Step-by-step", "Multi-language", "Handwriting Support"],
+  },
+  {
+    id: "visualisation",
+    name: "Visualisation Engine",
+    shortName: "Visual",
+    description: "On-demand diagrams, animations and 3D models for any subject",
+    icon: BarChart3,
+    color: "#F59E0B",
+    gradient: "from-amber-500 to-orange-600",
+    href: "/modules/visualisation",
+    difficulty: "MEDIUM",
+    features: ["SVG Diagrams", "3D Models", "Animations", "Hand-drawn Style"],
+  },
+  {
+    id: "exam-assistant",
+    name: "Exam Assistant",
+    shortName: "Exams",
+    description: "Personalised prep for 100+ exams with 50,000+ previous year questions",
+    icon: FileText,
+    color: "#EF4444",
+    gradient: "from-red-500 to-rose-600",
+    href: "/modules/exam-assistant",
+    difficulty: "EASY-MEDIUM",
+    features: ["50,000+ PYQs", "Weak-area Detection", "Study Plans", "Mock Tests"],
+  },
+  {
+    id: "omni-bot",
+    name: "Omni-Bot",
+    shortName: "Bot",
+    description: "WhatsApp, Voice & SMS bots for learning anywhere, anytime",
+    icon: MessageSquare,
+    color: "#22C55E",
+    gradient: "from-green-500 to-emerald-600",
+    href: "/modules/omni-bot",
+    difficulty: "EASY",
+    features: ["WhatsApp Bot", "Voice Bot", "SMS Bot", "Telegram Bot"],
+  },
+  {
+    id: "research-suite",
+    name: "Research Suite",
+    shortName: "Research",
+    description: "Paper summariser, literature review, citation manager & AI writing co-pilot",
+    icon: BookOpen,
+    color: "#6366F1",
+    gradient: "from-indigo-500 to-violet-600",
+    href: "/modules/research-suite",
+    difficulty: "MEDIUM-HARD",
+    features: ["Paper Summary", "Lit Review", "Citation Manager", "AI Co-pilot"],
+  },
+  {
+    id: "medical",
+    name: "Medical Module",
+    shortName: "Medical",
+    description: "3D anatomy, pharmacology, clinical decision support & CME tracking",
+    icon: Stethoscope,
+    color: "#EC4899",
+    gradient: "from-pink-500 to-rose-600",
+    href: "/modules/medical",
+    difficulty: "HARD",
+    features: ["3D Anatomy", "Pharmacology", "CDS API", "CME Tracking"],
+  },
+  {
+    id: "engineering",
+    name: "Engineering Module",
+    shortName: "Engineering",
+    description: "GATE prep, circuit visualiser, algorithm animations & FYP assistant",
+    icon: Cpu,
+    color: "#14B8A6",
+    gradient: "from-teal-500 to-cyan-600",
+    href: "/modules/engineering",
+    difficulty: "MEDIUM",
+    features: ["GATE Prep", "Circuit Sim", "Algorithm Viz", "FYP Helper"],
+  },
+  {
+    id: "higher-education",
+    name: "Higher Education",
+    shortName: "Higher Ed",
+    description: "100+ college disciplines covering arts, commerce, law & management",
+    icon: GraduationCap,
+    color: "#A855F7",
+    gradient: "from-purple-500 to-fuchsia-600",
+    href: "/modules/higher-education",
+    difficulty: "MEDIUM-HARD",
+    features: ["100+ Disciplines", "University Prep", "Adaptive Learning", "Multi-format"],
+  },
+];
+
+export const LANGUAGES = [
+  "English", "Tamil", "Hindi", "Telugu", "Kannada", "Malayalam",
+  "Marathi", "Bengali", "Gujarati", "Punjabi", "Odia", "Assamese",
+  "Urdu", "Sanskrit", "Konkani", "Manipuri", "Nepali", "Bodo",
+  "Dogri", "Maithili", "Santali", "Sindhi",
+];
+
+export const PEDAGOGY_DIMENSIONS = [
+  { key: "analogy", label: "Analogy", color: "#8B5CF6" },
+  { key: "visual", label: "Visual Diagrams", color: "#06B6D4" },
+  { key: "stepByStep", label: "Step-by-step", color: "#10B981" },
+  { key: "storytelling", label: "Storytelling", color: "#F59E0B" },
+  { key: "formal", label: "Formal Definition", color: "#EF4444" },
+];
