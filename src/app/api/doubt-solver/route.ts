@@ -35,7 +35,7 @@ const PROVIDERS: Record<
   string,
   { name: string; emoji: string; model: string }
 > = {
-  gemini: { name: "Google Gemini", emoji: "🟢", model: "gemini-1.5-flash" },
+  gemini: { name: "Google Gemini", emoji: "🟢", model: "gemini-2.0-flash" },
   chatgpt: { name: "ChatGPT", emoji: "🟡", model: "gpt-4o-mini" },
   claude: { name: "Claude", emoji: "🟠", model: "claude-sonnet-4-20250514" },
   kimi: { name: "Kimi", emoji: "🔵", model: "moonshot-v1-8k" },
@@ -47,7 +47,10 @@ async function callGemini(
 ) {
   const { GoogleGenerativeAI } = await import("@google/generative-ai");
   const client = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-  const model = client.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = client.getGenerativeModel({
+    model: "gemini-2.0-flash",
+    systemInstruction: SYSTEM_PROMPT,
+  });
 
   const history = messages.slice(0, -1).map((m) => ({
     role: m.role === "user" ? "user" : ("model" as const),
@@ -56,7 +59,6 @@ async function callGemini(
 
   const chat = model.startChat({
     history: history.length > 0 ? history : undefined,
-    systemInstruction: SYSTEM_PROMPT,
   });
 
   const lastMsg = messages[messages.length - 1].content;
@@ -213,6 +215,17 @@ export async function POST(request: NextRequest) {
     const errMsg =
       error instanceof Error ? error.message : "Unknown error occurred";
     console.error("Doubt solver error:", errMsg);
-    return Response.json({ error: errMsg }, { status: 500 });
+
+    // Friendly error messages
+    let userMessage = errMsg;
+    if (errMsg.includes("quota") || errMsg.includes("429") || errMsg.includes("RESOURCE_EXHAUSTED")) {
+      userMessage = "⏳ API rate limit reached. The free Gemini tier has a daily quota — please wait a minute and try again, or add a paid API key for unlimited access.";
+    } else if (errMsg.includes("API key") || errMsg.includes("401") || errMsg.includes("403")) {
+      userMessage = "🔑 Invalid API key. Please check your API key in .env.local and restart the server.";
+    } else if (errMsg.includes("network") || errMsg.includes("ENOTFOUND")) {
+      userMessage = "🌐 Network error. Please check your internet connection and try again.";
+    }
+
+    return Response.json({ error: userMessage }, { status: 500 });
   }
 }
