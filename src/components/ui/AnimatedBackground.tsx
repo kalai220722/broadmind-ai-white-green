@@ -44,6 +44,12 @@ export default function AnimatedBackground({ density = 60 }: { density?: number 
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Detect theme each frame so particles adapt instantly
+      const isLight = document.documentElement.dataset.theme === "light";
+      const lightness = isLight ? 50 : 70;
+      const lineAlphaBase = isLight ? 0.22 : 0.15;
+      const fillAlphaBase = isLight ? 1.4 : 1.0;
+
       // draw connections
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -53,7 +59,9 @@ export default function AnimatedBackground({ density = 60 }: { density?: number 
           const dy = a.y - b.y;
           const dist = Math.hypot(dx, dy);
           if (dist < 120) {
-            ctx.strokeStyle = `hsla(${(a.hue + b.hue) / 2}, 80%, 70%, ${(1 - dist / 120) * 0.15})`;
+            ctx.strokeStyle = `hsla(${(a.hue + b.hue) / 2}, 75%, ${lightness}%, ${
+              (1 - dist / 120) * lineAlphaBase
+            })`;
             ctx.lineWidth = 0.6;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -69,7 +77,7 @@ export default function AnimatedBackground({ density = 60 }: { density?: number 
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-        ctx.fillStyle = `hsla(${p.hue}, 85%, 70%, ${p.alpha})`;
+        ctx.fillStyle = `hsla(${p.hue}, 80%, ${lightness}%, ${Math.min(1, p.alpha * fillAlphaBase)})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();

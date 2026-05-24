@@ -19,6 +19,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
+import { track } from "@/lib/personalization";
 
 interface Note {
   id: string;
@@ -70,6 +71,7 @@ export default function NotesPage() {
     setNotes((prev) => [n, ...prev]);
     setActiveId(n.id);
     setPreviewMode(false);
+    track("note_created");
   };
 
   const update = (patch: Partial<Note>) => {
@@ -113,6 +115,7 @@ export default function NotesPage() {
       if (data.error) throw new Error(data.error);
       update({ summary: data.summary });
       setShowSummary(true);
+      track("note_summarized");
       toast.success("AI summary ready!");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed";

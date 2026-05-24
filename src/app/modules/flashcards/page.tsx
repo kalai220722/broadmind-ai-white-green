@@ -21,6 +21,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import { smallConfetti } from "@/lib/confetti";
+import { track } from "@/lib/personalization";
 
 interface Card {
   id: string;
@@ -167,6 +168,7 @@ export default function FlashcardsPage() {
           : d
       )
     );
+    track(easy ? "flashcard_easy" : "flashcard_hard", { deck: activeDeck.name });
     next();
   };
 

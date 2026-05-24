@@ -3,11 +3,13 @@
 import { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./ThemeProvider";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
       {children}
+      <OnboardingModal />
       <Toaster
         position="top-right"
         toastOptions={{

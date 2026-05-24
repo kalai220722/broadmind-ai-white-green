@@ -18,6 +18,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import { smallConfetti } from "@/lib/confetti";
+import { track } from "@/lib/personalization";
 
 interface Task {
   id: string;
@@ -119,7 +120,10 @@ export default function PlannerPage() {
     setTasks((prev) =>
       prev.map((t) => {
         if (t.id === id) {
-          if (!t.done) smallConfetti();
+          if (!t.done) {
+            smallConfetti();
+            track("task_completed", { subject: t.subject || "other", minutes: t.duration || 0 });
+          }
           return { ...t, done: !t.done };
         }
         return t;

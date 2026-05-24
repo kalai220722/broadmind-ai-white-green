@@ -12,6 +12,11 @@ import {
   Users,
   Languages,
   Award,
+  Compass,
+  Target,
+  GitBranch,
+  Layers,
+  Telescope,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { MODULES } from "@/lib/constants";
@@ -23,35 +28,53 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const stats = [
   { value: "22+", label: "Languages", icon: Languages },
-  { value: "16", label: "AI Modules", icon: Brain },
-  { value: "100+", label: "Subjects", icon: Award },
-  { value: "5", label: "AI Models", icon: Zap },
+  { value: "17", label: "AI Modules", icon: Brain },
+  { value: "Class 8", label: "→ PhD", icon: Layers },
+  { value: "1", label: "Profile / You", icon: Target },
 ];
 
 const highlights = [
   {
     icon: Brain,
-    title: "Multi-AI Brain",
-    text: "Gemini, ChatGPT, Claude, Groq & Kimi all in one place. Switch instantly.",
-    color: "from-violet-500 to-purple-600",
+    title: "Personalisation Engine",
+    text: "Our ML profile learns how YOU learn — your pace, style, strengths — and adapts every lesson.",
+    color: "from-violet-500 to-fuchsia-600",
   },
   {
-    icon: Languages,
-    title: "22+ Languages",
-    text: "Learn in Tamil, Hindi, Telugu, English — the AI speaks your language.",
+    icon: Layers,
+    title: "Every level of learning",
+    text: "Class 8 to PhD. JEE to GATE to CAT to UPSC. Engineering, medicine, law, arts — all in one platform.",
     color: "from-cyan-500 to-blue-600",
   },
   {
     icon: Zap,
-    title: "Instant Answers",
-    text: "Step-by-step solutions with formulas, code, and visualizations.",
+    title: "5 AI brains, one app",
+    text: "Gemini, ChatGPT, Claude, Groq & Kimi. Pick the model that fits the question — or let us pick.",
     color: "from-pink-500 to-rose-600",
   },
   {
-    icon: Globe2,
-    title: "Every Discipline",
-    text: "Math, science, code, medicine, law, arts — Class 8 to PhD.",
+    icon: Languages,
+    title: "22+ Indian languages",
+    text: "Learn in Tamil, Hindi, Telugu, English, Bengali — the AI replies in whatever language you use.",
     color: "from-emerald-500 to-green-600",
+  },
+];
+
+const personalizationSteps = [
+  {
+    icon: Telescope,
+    title: "Observe",
+    text: "Every question, every answer, every quiz, every flashcard — silently tracked on your device.",
+  },
+  {
+    icon: Compass,
+    title: "Model",
+    text: "We build your Learning DNA: dominant style, pace, weak topics, best study hours.",
+  },
+  {
+    icon: GitBranch,
+    title: "Adapt",
+    text: "Future lessons, examples, and recommendations bend to match how YOU absorb best.",
   },
 ];
 
@@ -71,9 +94,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           <Logo size={36} />
           <div className="hidden md:flex items-center gap-6 text-sm text-slate-300">
+            <a href="#personalisation" className="hover:text-white transition">Personalisation</a>
             <a href="#features" className="hover:text-white transition">Features</a>
             <a href="#modules" className="hover:text-white transition">Modules</a>
-            <a href="#about" className="hover:text-white transition">About</a>
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
@@ -100,7 +123,7 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-medium mb-6"
           >
             <Sparkles size={14} />
-            India&apos;s First Unified AI Learning Platform
+            ML-Personalised. Every level. Every language.
           </motion.div>
 
           <motion.h1
@@ -109,9 +132,9 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight"
           >
-            Learn anything,
+            We learn how
             <br />
-            <span className="animate-gradient-text">in any language.</span>
+            <span className="animate-gradient-text">you learn.</span>
           </motion.h1>
 
           <motion.p
@@ -120,8 +143,9 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-10"
           >
-            16 AI-powered modules. 5 frontier models. 22+ Indian languages.
-            Doubt solving, flashcards, quizzes, study plans — all in one unified platform.
+            Our ML engine builds a private profile of your pace, style, and weak spots — then
+            adapts every lesson to match. <span className="text-slate-200">Class 8 to PhD</span>,
+            17 modules, 5 AI brains, 22+ Indian languages — all in one platform.
           </motion.p>
 
           <motion.div
@@ -163,6 +187,115 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </motion.section>
+
+      {/* Personalisation story */}
+      <section id="personalisation" className="relative py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-xs font-medium mb-4">
+              <Brain size={12} /> The BroadMind ML Engine
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              One profile. <span className="animate-gradient-text">One curriculum.</span> Just for you.
+            </h2>
+            <p className="text-slate-400 text-lg max-w-3xl mx-auto">
+              Generic learning apps teach everyone the same way. BroadMind&apos;s ML engine watches how you
+              think, finds your strongest path, and only then teaches you.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-16">
+            {personalizationSteps.map((s, i) => (
+              <motion.div
+                key={s.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <GlassCard className="p-6 h-full relative overflow-hidden">
+                  <div className="absolute top-3 right-4 text-5xl font-bold text-violet-500/10">
+                    0{i + 1}
+                  </div>
+                  <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-violet-500/20 mb-4">
+                    <s.icon size={20} className="text-violet-300" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">{s.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{s.text}</p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Personalisation chip showcase */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: 0.2 }}
+          >
+            <GlassCard className="p-6 md:p-10" glow>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    Your <span className="animate-gradient-text">Learning DNA</span>
+                  </h3>
+                  <p className="text-slate-400 mb-6">
+                    Every interaction adds a data point. Within a week, BroadMind knows whether you
+                    learn best from analogies, diagrams, step-by-step proofs, stories, or strict
+                    definitions — and tunes every future answer to match.
+                  </p>
+                  <ul className="space-y-2.5 text-sm text-slate-300">
+                    {[
+                      "Learning style radar (5 dimensions)",
+                      "Per-topic mastery tracking",
+                      "Best-hour-of-day detection",
+                      "Weak-area auto-detection → flashcards",
+                      "Adaptive difficulty for quizzes",
+                    ].map((f) => (
+                      <li key={f} className="flex items-center gap-2">
+                        <span className="text-emerald-400">✓</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href="/modules/insights">
+                    <ShimmerButton className="mt-6">
+                      See your Learning DNA <ArrowRight size={14} />
+                    </ShimmerButton>
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {[
+                    { tag: "💡 Analogy 28%", color: "violet" },
+                    { tag: "👁️ Visual 22%", color: "cyan" },
+                    { tag: "📋 Step 19%", color: "emerald" },
+                    { tag: "📖 Story 17%", color: "amber" },
+                    { tag: "🎓 Formal 14%", color: "rose" },
+                    { tag: "⏰ Best @ 9am", color: "violet" },
+                    { tag: "🔥 7-day streak", color: "rose" },
+                    { tag: "⚡ Pace: medium", color: "cyan" },
+                    { tag: "💪 Strong: calculus", color: "emerald" },
+                    { tag: "🎯 Grow: organic chem", color: "amber" },
+                  ].map((c) => (
+                    <motion.div
+                      key={c.tag}
+                      whileHover={{ scale: 1.05 }}
+                      className={`text-center p-2.5 rounded-lg bg-${c.color}-500/10 border border-${c.color}-500/20 text-${c.color}-300`}
+                    >
+                      {c.tag}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </GlassCard>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Features */}
       <section id="features" className="relative py-24 px-6">

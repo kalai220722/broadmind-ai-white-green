@@ -14,14 +14,12 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("bm-theme") as Theme | null;
     const initial: Theme = stored ?? "dark";
     setThemeState(initial);
     document.documentElement.dataset.theme = initial;
-    setMounted(true);
   }, []);
 
   const setTheme = (t: Theme) => {
@@ -34,7 +32,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
-      <div suppressHydrationWarning>{mounted ? children : <div className="opacity-0">{children}</div>}</div>
+      {children}
     </ThemeContext.Provider>
   );
 }

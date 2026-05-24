@@ -15,6 +15,7 @@ import {
   StickyNote,
   MonitorPlay,
   CalendarDays,
+  Brain,
   type LucideIcon,
 } from "lucide-react";
 
@@ -211,6 +212,18 @@ export const MODULES: Module[] = [
     href: "/modules/youtube",
     difficulty: "EASY",
     features: ["URL → Summary", "Key Points", "Auto Quiz", "Multi-language"],
+  },
+  {
+    id: "insights",
+    name: "Learning DNA",
+    shortName: "Insights",
+    description: "See how the AI engine maps your unique learning style and recommends what to do next",
+    icon: Brain,
+    color: "#A855F7",
+    gradient: "from-violet-500 to-fuchsia-600",
+    href: "/modules/insights",
+    difficulty: "EASY",
+    features: ["Learning Style Radar", "Mastery Tracking", "Smart Recommendations", "Achievements"],
   },
   {
     id: "planner",

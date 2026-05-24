@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import AppLayout from "@/components/layout/AppLayout";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
+import { track } from "@/lib/personalization";
 
 interface Summary {
   title: string;
@@ -52,6 +53,7 @@ export default function YouTubePage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setSummary(data);
+      track("youtube_summarized");
       toast.success("Summary generated!");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed";

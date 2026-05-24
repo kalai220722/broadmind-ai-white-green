@@ -8,6 +8,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import { celebrate } from "@/lib/confetti";
+import { track } from "@/lib/personalization";
 
 type Mode = "focus" | "shortBreak" | "longBreak";
 
@@ -77,6 +78,7 @@ export default function PomodoroPage() {
           if (mode === "focus") {
             recordCompletion();
             celebrate();
+            track("pomodoro_completed", { minutes: focusMinutes });
             toast.success("Focus session complete! 🎉 Time for a break.");
             playBell();
             setMode("shortBreak");

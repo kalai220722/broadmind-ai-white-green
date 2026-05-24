@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Globe,
   Flame,
+  X,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { MODULES } from "@/lib/constants";
@@ -19,39 +20,45 @@ import { clsx } from "clsx";
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
+  mobile?: boolean;
+  onNavigate?: () => void;
 }
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/profile", label: "Profile", icon: User },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export default function Sidebar({ collapsed, onToggle, mobile, onNavigate }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside
-      className={clsx(
-        "fixed left-0 top-0 z-40 h-screen bg-slate-950 border-r border-slate-800/50 flex flex-col transition-all duration-300",
-        collapsed ? "w-[72px]" : "w-[260px]"
-      )}
-    >
-      <div className="flex items-center justify-between p-4 border-b border-slate-800/50">
-        <Link href="/">
+    <div className="h-full w-full bg-slate-950/95 backdrop-blur-xl border-r border-slate-800/50 flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-slate-800/50 flex-shrink-0">
+        <Link href="/dashboard" onClick={onNavigate}>
           <Logo size={36} showText={!collapsed} />
         </Link>
         <button
           onClick={onToggle}
+          aria-label={mobile ? "Close menu" : collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className={clsx(
-            "p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors",
-            collapsed && "mx-auto mt-2"
+            "p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors",
+            collapsed && !mobile && "mx-auto mt-2"
           )}
         >
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          {mobile ? (
+            <X size={18} />
+          ) : collapsed ? (
+            <ChevronRight size={16} />
+          ) : (
+            <ChevronLeft size={16} />
+          )}
         </button>
       </div>
 
+      {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1 scrollbar-thin">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -59,6 +66,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onNavigate}
               className={clsx(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
                 isActive
@@ -87,6 +95,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             <Link
               key={mod.id}
               href={mod.href}
+              onClick={onNavigate}
               className={clsx(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group",
                 isActive
@@ -107,10 +116,11 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         })}
       </nav>
 
+      {/* Footer profile */}
       {!collapsed && (
-        <div className="p-4 border-t border-slate-800/50">
+        <div className="p-4 border-t border-slate-800/50 flex-shrink-0">
           <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-violet-600/10 to-cyan-600/10 border border-violet-500/20">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               {mockStudent.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
@@ -120,13 +130,13 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                 <span>{mockStudent.streakDays} day streak</span>
               </div>
             </div>
-            <div className="flex items-center gap-1 text-xs text-slate-400">
+            <div className="flex items-center gap-1 text-xs text-slate-400 flex-shrink-0">
               <Globe size={12} />
-              <span>{mockStudent.language}</span>
+              <span className="hidden sm:inline">{mockStudent.language}</span>
             </div>
           </div>
         </div>
       )}
-    </aside>
+    </div>
   );
 }

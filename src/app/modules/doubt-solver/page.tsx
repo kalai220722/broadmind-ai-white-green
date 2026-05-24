@@ -26,6 +26,7 @@ import AppLayout from "@/components/layout/AppLayout";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
+import { track } from "@/lib/personalization";
 
 type Role = "user" | "assistant";
 interface Message {
@@ -134,6 +135,7 @@ export default function DoubtSolverPro() {
 
   // ── Voice recognition ─────────────────────────────────────────────
   const startListening = () => {
+    track("doubt_voice");
     type SR = {
       lang: string;
       continuous: boolean;
@@ -251,6 +253,12 @@ export default function DoubtSolverPro() {
     const submittedImage = imageData;
     setImageData(null);
     setIsLoading(true);
+
+    // ── ML profile tracking ────────────────────────────────────────────
+    track(submittedImage ? "doubt_image" : "doubt_asked", {
+      length: userMsg.content.length,
+      prompt: userMsg.content.slice(0, 200),
+    });
 
     try {
       const res = await fetch("/api/doubt-solver", {
