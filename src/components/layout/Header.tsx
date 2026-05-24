@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { mockStudent } from "@/lib/mock-data";
 import { LANGUAGES } from "@/lib/constants";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -128,6 +129,9 @@ export default function Header({ onMenuClick, title }: HeaderProps) {
               </>
             )}
           </div>
+
+          {/* Theme toggle */}
+          <ThemeToggle />
 
           {/* Profile avatar */}
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm cursor-pointer">

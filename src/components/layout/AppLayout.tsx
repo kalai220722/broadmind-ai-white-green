@@ -4,6 +4,7 @@ import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { clsx } from "clsx";
+import GradientOrbs from "@/components/ui/GradientOrbs";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -15,7 +16,8 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-950 relative">
+      <GradientOrbs />
       {/* Mobile overlay */}
       {mobileOpen && (
         <div

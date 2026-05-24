@@ -8,8 +8,8 @@ RULES:
 2. If the student mixes languages (e.g., Tamil + English), reply in the same mix.
 3. Always provide step-by-step solutions.
 4. Use analogies that relate to everyday Indian life to explain concepts.
-5. For math/physics/chemistry: show the full working with formulas.
-6. For coding questions: provide clean, commented code.
+5. For math/physics/chemistry: show full working with formulas — wrap math in LaTeX delimiters: $...$ for inline, $$...$$ for block.
+6. For coding questions: provide clean, commented code inside fenced code blocks with language tags (e.g., \`\`\`python ... \`\`\`).
 7. Keep answers concise but complete.
 8. Use emojis sparingly to make it friendly: ✅ for correct steps, 📝 for notes, 💡 for tips.
 9. At the end of each answer, ask a quick follow-up question to check understanding.
@@ -42,9 +42,10 @@ const PROVIDERS: Record<
   kimi: { name: "Kimi", emoji: "🔵", model: "moonshot-v1-8k" },
 };
 
-// ── Gemini handler ──────────────────────────────────────────────────
+// ── Gemini handler (with vision support) ─────────────────────────
 async function callGemini(
-  messages: { role: string; content: string }[]
+  messages: { role: string; content: string }[],
+  imageBase64?: string
 ) {
   const { GoogleGenerativeAI } = await import("@google/generative-ai");
   const client = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -52,6 +53,19 @@ async function callGemini(
     model: "gemini-2.0-flash",
     systemInstruction: SYSTEM_PROMPT,
   });
+
+  if (imageBase64) {
+    const lastMsg =
+      messages[messages.length - 1]?.content || "Solve this problem step by step.";
+    const mimeMatch = imageBase64.match(/^data:(image\/\w+);base64,/);
+    const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
+    const data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
+    const result = await model.generateContent([
+      { text: lastMsg },
+      { inlineData: { mimeType, data } },
+    ]);
+    return result.response.text();
+  }
 
   const history = messages.slice(0, -1).map((m) => ({
     role: m.role === "user" ? "user" : ("model" as const),
@@ -189,9 +203,11 @@ export async function POST(request: NextRequest) {
     const {
       messages,
       provider: requestedProvider,
+      image,
     }: {
       messages: { role: string; content: string }[];
       provider: string;
+      image?: string;
     } = body;
 
     if (!messages || messages.length === 0) {
@@ -199,9 +215,13 @@ export async function POST(request: NextRequest) {
     }
 
     const available = getAvailableProviders();
-    const provider = available.includes(requestedProvider)
+    let provider = available.includes(requestedProvider)
       ? requestedProvider
       : available[0];
+    // Force Gemini when an image is provided (only one with vision)
+    if (image && available.includes("gemini")) {
+      provider = "gemini";
+    }
 
     if (!provider) {
       return Response.json(
@@ -218,7 +238,7 @@ export async function POST(request: NextRequest) {
 
     switch (provider) {
       case "gemini":
-        response = await callGemini(messages);
+        response = await callGemini(messages, image);
         break;
       case "chatgpt":
         response = await callChatGPT(messages);
