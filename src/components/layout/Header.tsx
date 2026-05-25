@@ -12,6 +12,7 @@ import {
 import { mockStudent } from "@/lib/mock-data";
 import { LANGUAGES } from "@/lib/constants";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { useProfile } from "@/lib/personalization";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -19,6 +20,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onMenuClick, title }: HeaderProps) {
+  const profile = useProfile();
   const [searchOpen, setSearchOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -71,7 +73,7 @@ export default function Header({ onMenuClick, title }: HeaderProps) {
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors text-sm"
             >
               <Globe size={16} />
-              <span className="hidden sm:inline">{mockStudent.language}</span>
+              <span className="hidden sm:inline">{profile.language}</span>
             </button>
             {langOpen && (
               <>
@@ -134,8 +136,11 @@ export default function Header({ onMenuClick, title }: HeaderProps) {
           <ThemeToggle />
 
           {/* Profile avatar */}
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm cursor-pointer">
-            {mockStudent.name.charAt(0)}
+          <div
+            className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm cursor-pointer"
+            title={profile.name}
+          >
+            {profile.name.charAt(0).toUpperCase()}
           </div>
         </div>
       </div>

@@ -28,6 +28,7 @@ import GradientOrbs from "@/components/ui/GradientOrbs";
 import GlassCard from "@/components/ui/GlassCard";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { track } from "@/lib/personalization";
 
 type Method = "phone" | "email";
 type Mode = "signin" | "signup";
@@ -65,15 +66,18 @@ export default function LoginPage() {
     setLoading(true);
     // simulate auth latency
     await new Promise((r) => setTimeout(r, 800));
+    const displayName = name.trim() || (email ? email.split("@")[0] : "Student");
     const user = {
-      name: name.trim() || (email ? email.split("@")[0] : "Student"),
+      name: displayName,
       email: email || null,
       phone: phone ? `${countryCode}${phone}` : null,
       language,
       loggedInAt: Date.now(),
     };
     localStorage.setItem("bm-user", JSON.stringify(user));
-    toast.success(`Welcome${user.name ? `, ${user.name.split(" ")[0]}` : ""}! 🎉`);
+    // Sync into ML profile so every screen sees the same name + language
+    track("onboarding_answer", { name: displayName, language });
+    toast.success(`Welcome${displayName ? `, ${displayName.split(" ")[0]}` : ""}! 🎉`);
     setLoading(false);
     router.push("/dashboard");
   };
@@ -88,6 +92,7 @@ export default function LoginPage() {
       guest: true,
     };
     localStorage.setItem("bm-user", JSON.stringify(user));
+    track("onboarding_answer", { name: "Guest", language });
     toast.success("Continuing as guest");
     router.push("/dashboard");
   };

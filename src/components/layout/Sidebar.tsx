@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { MODULES } from "@/lib/constants";
-import { mockStudent } from "@/lib/mock-data";
+import { useProfile } from "@/lib/personalization";
 import { clsx } from "clsx";
 
 interface SidebarProps {
@@ -32,6 +32,7 @@ const navItems = [
 
 export default function Sidebar({ collapsed, onToggle, mobile, onNavigate }: SidebarProps) {
   const pathname = usePathname();
+  const profile = useProfile();
 
   return (
     <div className="h-full w-full bg-slate-950/95 backdrop-blur-xl border-r border-slate-800/50 flex flex-col">
@@ -121,18 +122,18 @@ export default function Sidebar({ collapsed, onToggle, mobile, onNavigate }: Sid
         <div className="p-4 border-t border-slate-800/50 flex-shrink-0">
           <div className="flex items-center gap-3 p-3 rounded-lg bg-gradient-to-r from-violet-600/10 to-cyan-600/10 border border-violet-500/20">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-              {mockStudent.name.charAt(0)}
+              {profile.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{mockStudent.name}</p>
+              <p className="text-sm font-medium text-white truncate">{profile.name}</p>
               <div className="flex items-center gap-1 text-xs text-amber-400">
                 <Flame size={12} />
-                <span>{mockStudent.streakDays} day streak</span>
+                <span>{profile.streakDays} day streak</span>
               </div>
             </div>
             <div className="flex items-center gap-1 text-xs text-slate-400 flex-shrink-0">
               <Globe size={12} />
-              <span className="hidden sm:inline">{mockStudent.language}</span>
+              <span className="hidden sm:inline">{profile.language}</span>
             </div>
           </div>
         </div>
