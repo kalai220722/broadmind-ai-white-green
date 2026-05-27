@@ -6,11 +6,14 @@ import { ThemeProvider } from "./ThemeProvider";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import FloatingTimer from "@/components/ui/FloatingTimer";
 import CoachBot from "@/components/ui/CoachBot";
+import CursorGlow from "@/components/ui/CursorGlow";
+import PageTransition from "@/components/ui/PageTransition";
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
-      {children}
+      <CursorGlow />
+      <PageTransition>{children}</PageTransition>
       <FloatingTimer />
       <CoachBot />
       <OnboardingModal />

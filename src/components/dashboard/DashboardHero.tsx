@@ -18,6 +18,7 @@ import {
   Clock,
 } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
+import TiltCard from "@/components/ui/TiltCard";
 import { useProfile, getDailyInsight, type LearnStyle } from "@/lib/personalization";
 import { EXAMS, nextOccurrence, daysUntil } from "@/lib/exams-data";
 
@@ -461,11 +462,11 @@ function InsightsTile() {
 // ── The hero strip ────────────────────────────────────────────────────
 export default function DashboardHero() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
-      <NewsCarousel />
-      <ExamCountdown />
-      <AIScheduleChip />
-      <InsightsTile />
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger">
+      <TiltCard intensity={0.6}><NewsCarousel /></TiltCard>
+      <TiltCard intensity={0.6}><ExamCountdown /></TiltCard>
+      <TiltCard intensity={0.6}><AIScheduleChip /></TiltCard>
+      <TiltCard intensity={0.6}><InsightsTile /></TiltCard>
     </div>
   );
 }

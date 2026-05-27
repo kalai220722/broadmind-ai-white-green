@@ -9,6 +9,7 @@ import {
   getRecommendations,
   type LearnStyle,
 } from "@/lib/personalization";
+import AnimatedNumber from "@/components/ui/AnimatedNumber";
 
 const STYLE_LABELS: Record<LearnStyle, string> = {
   analogy: "Analogy-based",
@@ -59,12 +60,14 @@ export default function SmartWelcome() {
           </p>
         </div>
 
-        {/* Quick stat strip */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-3">
-          <Stat icon={Flame} value={profile.streakDays} label="Day streak" color="rose" />
-          <Stat
+        {/* Quick stat strip — animated counters */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-3 stagger">
+          <StatCount icon={Flame} value={profile.streakDays} label="Day streak" color="rose" />
+          <StatCount
             icon={Clock}
-            value={`${(profile.counters.minutesFocused / 60).toFixed(1)}h`}
+            value={profile.counters.minutesFocused / 60}
+            decimals={1}
+            suffix="h"
             label="Focused"
             color="cyan"
           />
@@ -74,7 +77,7 @@ export default function SmartWelcome() {
             label="Top style"
             color="violet"
           />
-          <Stat
+          <StatCount
             icon={TrendingUp}
             value={profile.counters.doubtsSolved}
             label="Doubts solved"
@@ -127,12 +130,52 @@ function Stat({
     emerald: "text-emerald-400",
   };
   return (
-    <div className="rounded-xl bg-white/5 border border-white/10 px-3 py-2 min-w-[88px]">
+    <motion.div
+      whileHover={{ y: -2, scale: 1.02 }}
+      className="rounded-xl bg-white/5 border border-white/10 px-3 py-2 min-w-[88px] lift-hover hover:border-violet-500/30"
+    >
       <div className="flex items-center gap-1.5 mb-0.5">
         <Icon size={12} className={colorClass[color] || "text-violet-400"} />
         <span className="text-[10px] uppercase tracking-widest text-slate-400">{label}</span>
       </div>
       <div className="text-lg font-bold text-white truncate">{value}</div>
-    </div>
+    </motion.div>
+  );
+}
+
+function StatCount({
+  icon: Icon,
+  value,
+  label,
+  color,
+  decimals = 0,
+  suffix = "",
+}: {
+  icon: typeof Sparkles;
+  value: number;
+  label: string;
+  color: string;
+  decimals?: number;
+  suffix?: string;
+}) {
+  const colorClass: Record<string, string> = {
+    rose: "text-rose-400",
+    cyan: "text-cyan-400",
+    violet: "text-violet-400",
+    emerald: "text-emerald-400",
+  };
+  return (
+    <motion.div
+      whileHover={{ y: -2, scale: 1.02 }}
+      className="rounded-xl bg-white/5 border border-white/10 px-3 py-2 min-w-[88px] lift-hover hover:border-violet-500/30"
+    >
+      <div className="flex items-center gap-1.5 mb-0.5">
+        <Icon size={12} className={colorClass[color] || "text-violet-400"} />
+        <span className="text-[10px] uppercase tracking-widest text-slate-400">{label}</span>
+      </div>
+      <div className="text-lg font-bold text-white truncate tabular-nums">
+        <AnimatedNumber value={value} decimals={decimals} suffix={suffix} />
+      </div>
+    </motion.div>
   );
 }

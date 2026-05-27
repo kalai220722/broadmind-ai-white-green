@@ -7,6 +7,10 @@ import SmartWelcome from "@/components/dashboard/SmartWelcome";
 import DashboardHero from "@/components/dashboard/DashboardHero";
 import GlassCard from "@/components/ui/GlassCard";
 import { MODULES } from "@/lib/constants";
+
+// These four are featured in the DashboardHero strip above — don't repeat them in the grid
+const HERO_MODULE_IDS = new Set(["news", "exams", "planner", "insights"]);
+const GRID_MODULES = MODULES.filter((m) => !HERO_MODULE_IDS.has(m.id));
 import { useProfile, ALL_BADGES, type LearnStyle } from "@/lib/personalization";
 import {
   Radar,
@@ -45,11 +49,11 @@ export default function Dashboard() {
         {/* Main column — modules */}
         <div className="xl:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">All Modules</h3>
-            <span className="text-xs text-slate-400">{MODULES.length} modules</span>
+            <h3 className="text-lg font-semibold text-white">Modules</h3>
+            <span className="text-xs text-slate-400">{GRID_MODULES.length} modules</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {MODULES.map((mod, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 stagger">
+            {GRID_MODULES.map((mod, i) => (
               <motion.div
                 key={mod.id}
                 initial={{ opacity: 0, y: 10 }}
