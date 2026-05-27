@@ -25,6 +25,7 @@ import GradientOrbs from "@/components/ui/GradientOrbs";
 import ShimmerButton from "@/components/ui/ShimmerButton";
 import GlassCard from "@/components/ui/GlassCard";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import RobotHero from "@/components/ui/RobotHero";
 
 const stats = [
   { value: "22+", label: "Languages", icon: Languages },
@@ -116,6 +117,16 @@ export default function LandingPage() {
         className="relative pt-20 pb-32 px-6"
       >
         <div className="max-w-7xl mx-auto text-center">
+          {/* Animated AI Robot mascot — talks on first visit */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7 }}
+            className="mb-8 flex justify-center"
+          >
+            <RobotHero />
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

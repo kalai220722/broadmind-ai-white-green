@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import AppLayout from "@/components/layout/AppLayout";
 import SmartWelcome from "@/components/dashboard/SmartWelcome";
+import DashboardHero from "@/components/dashboard/DashboardHero";
 import GlassCard from "@/components/ui/GlassCard";
 import { MODULES } from "@/lib/constants";
 import { useProfile, ALL_BADGES, type LearnStyle } from "@/lib/personalization";
@@ -35,6 +36,9 @@ export default function Dashboard() {
 
   return (
     <AppLayout title="Dashboard">
+      {/* TOP HERO: News · Exam Countdown · AI Today · DNA Insights */}
+      <DashboardHero />
+
       <SmartWelcome />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">

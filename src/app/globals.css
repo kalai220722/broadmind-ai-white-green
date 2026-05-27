@@ -266,6 +266,15 @@ body {
   50% { background-position: 100% 50%; }
 }
 
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(192, 132, 252, 0.5); }
+  100% { box-shadow: 0 0 0 16px rgba(192, 132, 252, 0); }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s infinite;
+}
+
 @keyframes typing-dot {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
   30% { transform: translateY(-4px); opacity: 1; }
