@@ -7,33 +7,52 @@ import AnimatedRobot from "./AnimatedRobot";
 import VoiceLanguageModal from "./VoiceLanguageModal";
 import { speak, getStoredVoiceLanguage, setStoredVoiceLanguage, stopAllVoice, type VoiceController } from "@/lib/voice";
 
-// One-line scripts per language. Robot reads ONE on landing.
+// Polished, motivational intro scripts. Punctuation is tuned for prosody —
+// commas = micro-pauses, dashes = breath beats, periods = full stops.
 const INTRO_SCRIPTS: Record<string, string[]> = {
   English: [
-    "Hi! I'm BroadMind — your personal AI learning OS.",
-    "I learn how you learn. Then every lesson, plan, and answer adapts to match your style.",
-    "Class 8 to PhD, twenty-two Indian languages, all in one studio. Ready to begin?",
+    "Hello, and welcome to BroadMind — the AI learning operating system, built just for you.",
+    "I don't teach everyone the same way. I learn how you learn — your pace, your style, your strengths — and then I adapt every lesson, every quiz, every plan, to match.",
+    "From class eight to PhD. Twenty-two Indian languages. One private profile, one beautiful studio. Your journey starts now. Are you ready?",
   ],
   Hindi: [
-    "नमस्ते! मैं ब्रॉडमाइंड हूँ — आपका व्यक्तिगत AI लर्निंग OS।",
-    "मैं सीखता हूँ कि आप कैसे सीखते हैं। फिर हर पाठ आपकी शैली से मेल खाता है।",
-    "कक्षा आठ से PhD तक, बाईस भारतीय भाषाएँ, सब एक जगह। चलें शुरू करें?",
+    "नमस्ते, ब्रॉडमाइंड में आपका स्वागत है — आपके लिए बनाया गया AI लर्निंग सिस्टम।",
+    "मैं हर किसी को एक जैसा नहीं सिखाता। मैं सीखता हूँ कि आप कैसे सीखते हैं — आपकी गति, आपकी शैली, आपकी ताकत — और फिर हर पाठ आपके अनुसार ढाल देता हूँ।",
+    "कक्षा आठ से PhD तक, बाईस भारतीय भाषाएँ, एक सुंदर स्टूडियो। आपकी यात्रा अभी शुरू होती है। तैयार हैं?",
   ],
   Tamil: [
-    "வணக்கம்! நான் ப்ராட்மைண்ட் — உங்கள் சொந்த AI கற்றல் OS.",
-    "நீங்கள் எப்படி கற்கிறீர்கள் என்பதை நான் கற்றுக்கொள்கிறேன். பிறகு ஒவ்வொரு பாடமும் உங்கள் பாணிக்கு பொருந்தும்.",
-    "8ம் வகுப்பு முதல் PhD வரை, 22 இந்திய மொழிகள், ஒரே இடத்தில். தொடங்கலாமா?",
+    "வணக்கம், ப்ராட்மைண்டுக்கு வரவேற்கிறோம் — உங்களுக்காகவே உருவாக்கப்பட்ட AI கற்றல் இயக்க முறைமை.",
+    "நான் எல்லோருக்கும் ஒரே மாதிரி கற்பிக்க மாட்டேன். நீங்கள் எப்படி கற்கிறீர்கள் என்பதை நான் கற்றுக்கொள்கிறேன், பிறகு ஒவ்வொரு பாடமும் உங்களுக்கு ஏற்ப மாறும்.",
+    "எட்டாம் வகுப்பு முதல் PhD வரை, இருபத்திரண்டு இந்திய மொழிகள், ஒரே ஸ்டுடியோ. உங்கள் பயணம் இப்போது தொடங்குகிறது.",
   ],
   Telugu: [
-    "నమస్తే! నేను బ్రాడ్‌మైండ్ — మీ సొంత AI లెర్నింగ్ OS.",
-    "మీరు ఎలా నేర్చుకుంటున్నారో నేను నేర్చుకుంటాను. తర్వాత ప్రతి పాఠం మీ శైలికి సరిపోతుంది.",
+    "నమస్తే, బ్రాడ్‌మైండ్‌కు స్వాగతం. ఇది మీ కోసం ప్రత్యేకంగా రూపొందించబడిన AI లెర్నింగ్ సిస్టమ్.",
+    "నేను అందరికీ ఒకే విధంగా నేర్పను. మీరు ఎలా నేర్చుకుంటారో నేను నేర్చుకుంటాను, తర్వాత ప్రతి పాఠం మీకు తగినట్లుగా మారుతుంది.",
   ],
-  Malayalam: ["നമസ്കാരം! ഞാൻ ബ്രോഡ്മൈൻഡ് — നിങ്ങളുടെ AI ലേണിംഗ് OS."],
-  Kannada: ["ನಮಸ್ಕಾರ! ನಾನು ಬ್ರಾಡ್‌ಮೈಂಡ್ — ನಿಮ್ಮ AI ಕಲಿಕೆ OS."],
-  Marathi: ["नमस्कार! मी ब्रॉडमाइंड — तुमचा AI लर्निंग OS."],
-  Bengali: ["নমস্কার! আমি ব্রডমাইন্ড — আপনার AI লার্নিং OS।"],
-  Gujarati: ["નમસ્તે! હું બ્રોડમાઇંડ છું — તમારું AI શીખવાનું OS."],
-  Punjabi: ["ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਬ੍ਰੌਡਮਾਈਂਡ ਹਾਂ — ਤੁਹਾਡਾ AI ਲਰਨਿੰਗ OS।"],
+  Malayalam: [
+    "നമസ്കാരം, ബ്രോഡ്മൈൻഡിലേക്ക് സ്വാഗതം — നിങ്ങൾക്കായി രൂപകൽപ്പന ചെയ്ത AI പഠന സിസ്റ്റം.",
+    "നിങ്ങൾ എങ്ങനെ പഠിക്കുന്നു എന്ന് ഞാൻ പഠിക്കും, എന്നിട്ട് ഓരോ പാഠവും നിങ്ങൾക്ക് ഇണങ്ങുന്ന വിധത്തിൽ ക്രമീകരിക്കും.",
+  ],
+  Kannada: [
+    "ನಮಸ್ಕಾರ, ಬ್ರಾಡ್‌ಮೈಂಡ್‌ಗೆ ಸ್ವಾಗತ — ನಿಮಗಾಗಿಯೇ ರಚಿಸಿದ AI ಕಲಿಕೆ ವ್ಯವಸ್ಥೆ.",
+    "ನೀವು ಹೇಗೆ ಕಲಿಯುತ್ತೀರಿ ಎಂಬುದನ್ನು ನಾನು ಕಲಿಯುತ್ತೇನೆ, ನಂತರ ಪ್ರತಿ ಪಾಠವೂ ನಿಮಗೆ ಸರಿಹೊಂದುತ್ತದೆ.",
+  ],
+  Marathi: [
+    "नमस्कार, ब्रॉडमाइंडमध्ये आपले स्वागत आहे — तुमच्यासाठी तयार केलेली AI शिकण्याची प्रणाली.",
+    "तुम्ही कसे शिकता ते मी शिकतो, मग प्रत्येक धडा तुमच्या शैलीनुसार बदलतो.",
+  ],
+  Bengali: [
+    "নমস্কার, ব্রডমাইন্ডে স্বাগতম — আপনার জন্য তৈরি AI শেখার সিস্টেম।",
+    "আপনি কীভাবে শিখছেন তা আমি শিখি, তারপর প্রতিটি পাঠ আপনার স্টাইলের সাথে মানিয়ে নেয়।",
+  ],
+  Gujarati: [
+    "નમસ્તે, બ્રોડમાઇંડમાં તમારું સ્વાગત છે — તમારા માટે બનાવેલ AI શીખવાની સિસ્ટમ.",
+    "તમે કેવી રીતે શીખો છો તે હું શીખું છું, પછી દરેક પાઠ તમારી શૈલી મુજબ બદલાય છે.",
+  ],
+  Punjabi: [
+    "ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਬ੍ਰੌਡਮਾਈਂਡ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ — ਤੁਹਾਡੇ ਲਈ ਬਣਾਇਆ ਗਿਆ AI ਸਿੱਖਣ ਦਾ ਸਿਸਟਮ।",
+    "ਤੁਸੀਂ ਕਿਵੇਂ ਸਿੱਖਦੇ ਹੋ ਇਹ ਮੈਂ ਸਿੱਖਦਾ ਹਾਂ, ਫਿਰ ਹਰ ਪਾਠ ਤੁਹਾਡੀ ਸ਼ੈਲੀ ਨਾਲ ਮੇਲ ਖਾਂਦਾ ਹੈ।",
+  ],
 };
 
 export default function RobotHero() {
@@ -71,7 +90,7 @@ export default function RobotHero() {
     }
     const line = scripts[currentLine];
     setState("talking");
-    const ctl = speak(line, language);
+    const ctl = speak(line, { language, style: "intro", speaker: "female" });
     setVoiceCtl(ctl);
     ctl.promise.then(() => {
       setTimeout(() => setCurrentLine((c) => c + 1), 350);

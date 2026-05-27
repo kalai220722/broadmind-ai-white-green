@@ -42,7 +42,7 @@ export default function VoiceLanguageModal({ open, onPicked, onSkip }: Props) {
   const preview = (lang: { id: string; native: string }) => {
     setPreviewing(lang.id);
     setSelected(lang.id);
-    const ctl = speak(lang.native, lang.id);
+    const ctl = speak(lang.native, { language: lang.id, style: "intro", speaker: "female" });
     ctl.promise.finally(() => setPreviewing(null));
   };
 

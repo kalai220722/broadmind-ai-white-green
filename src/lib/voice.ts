@@ -1,25 +1,20 @@
 "use client";
 
 // ─────────────────────────────────────────────────────────────────────
-// BroadMind voice engine
+// BroadMind voice engine — tiered, professional-quality TTS
 //
-// Strategy:
-//   1. For Indian languages → POST to /api/tts (Sarvam AI)
-//   2. If Sarvam unavailable or English requested → use browser
-//      SpeechSynthesis (free, instant, works offline)
-//
-// Returns a controller so callers can stop playback mid-way.
+// Strategy (server picks the best):
+//   1. OpenAI TTS HD     → nova / shimmer / onyx / echo  (best, English+mixed)
+//   2. Sarvam AI         → native Indian-language pronunciation
+//   3. Browser SpeechSynthesis (client fallback, offline)
 // ─────────────────────────────────────────────────────────────────────
+
+export type VoiceStyle = "professional" | "motivational" | "intro" | "casual";
 
 export interface VoiceController {
   stop: () => void;
   promise: Promise<void>;
 }
-
-const SARVAM_LANGS = new Set([
-  "Hindi", "Tamil", "Telugu", "Malayalam", "Kannada",
-  "Marathi", "Gujarati", "Bengali", "Punjabi", "Odia",
-]);
 
 const BROWSER_LANG_MAP: Record<string, string> = {
   English: "en-IN",
@@ -50,8 +45,19 @@ export function stopAllVoice() {
   currentUtter = null;
 }
 
-export function speak(text: string, language: string = "English"): VoiceController {
+interface SpeakOptions {
+  language?: string;
+  style?: VoiceStyle;
+  speaker?: "female" | "male";
+}
+
+export function speak(text: string, options: string | SpeakOptions = "English"): VoiceController {
   stopAllVoice();
+  const opts: SpeakOptions = typeof options === "string" ? { language: options } : options;
+  const language = opts.language || "English";
+  const style = opts.style || "professional";
+  const speaker = opts.speaker || "female";
+
   let stopped = false;
   const ctl: { stop: () => void; promise: Promise<void> } = {
     stop: () => {
@@ -63,50 +69,94 @@ export function speak(text: string, language: string = "English"): VoiceControll
 
   ctl.promise = (async () => {
     if (stopped) return;
-    const clean = text.replace(/[*_`#$]/g, "").replace(/!\[.*?\]\(.*?\)/g, "").slice(0, 1500);
+    // Clean text for speech — remove markdown noise but keep punctuation for prosody
+    const clean = text
+      .replace(/[*_`#$]/g, "")
+      .replace(/!\[.*?\]\(.*?\)/g, "")
+      .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 1500);
 
-    // Try Sarvam for Indian languages
-    if (SARVAM_LANGS.has(language)) {
-      try {
-        const res = await fetch("/api/tts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: clean, language }),
-        });
-        if (stopped) return;
-        if (res.ok) {
-          const data = await res.json();
-          if (data.audio) {
-            const audio = new Audio(`data:audio/wav;base64,${data.audio}`);
-            currentAudio = audio;
-            return new Promise<void>((resolve) => {
-              audio.onended = () => resolve();
-              audio.onerror = () => resolve();
-              audio.play().catch(() => resolve());
-            });
-          }
+    // Try server-side (OpenAI HD / Sarvam)
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: clean, language, style, speaker }),
+      });
+      if (stopped) return;
+      if (res.ok) {
+        const data = await res.json();
+        if (data.audio) {
+          const mime = data.format === "mp3" ? "audio/mpeg" : "audio/wav";
+          const audio = new Audio(`data:${mime};base64,${data.audio}`);
+          // Subtle warmth via playback rate (closer to natural speech)
+          audio.playbackRate = style === "motivational" ? 1.0 : 1.0;
+          audio.volume = 1.0;
+          currentAudio = audio;
+          return new Promise<void>((resolve) => {
+            audio.onended = () => resolve();
+            audio.onerror = () => resolve();
+            audio.play().catch(() => resolve());
+          });
         }
-      } catch {
-        // fall through to browser TTS
       }
+    } catch {
+      // fall through to browser TTS
     }
 
-    // Browser SpeechSynthesis fallback
+    if (stopped) return;
+    // Browser SpeechSynthesis fallback — pick the highest-quality voice available
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+    // Voices load async on some browsers — wait if not yet populated
+    let voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      await new Promise<void>((resolve) => {
+        const handler = () => {
+          window.speechSynthesis.removeEventListener("voiceschanged", handler);
+          resolve();
+        };
+        window.speechSynthesis.addEventListener("voiceschanged", handler);
+        setTimeout(resolve, 800); // safety timeout
+      });
+      voices = window.speechSynthesis.getVoices();
+    }
     if (stopped) return;
 
     const utter = new SpeechSynthesisUtterance(clean);
     utter.lang = BROWSER_LANG_MAP[language] || "en-IN";
-    utter.rate = 1;
-    utter.pitch = 1;
+    utter.rate = style === "motivational" || style === "intro" ? 0.95 : 1.02;
+    utter.pitch = style === "motivational" ? 1.05 : 1.0;
     utter.volume = 1;
 
-    // Prefer a female Indian voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find((v) =>
-      v.lang === utter.lang && /female|samantha|google/i.test(v.name)
-    ) || voices.find((v) => v.lang.startsWith(utter.lang.split("-")[0]));
-    if (preferred) utter.voice = preferred;
+    // Tiered voice selection — premium neural voices first
+    const langPrefix = utter.lang.split("-")[0];
+
+    // Tier A: explicitly premium / neural / Siri-grade voices for this language
+    const tierA = voices.find((v) =>
+      v.lang.startsWith(langPrefix) &&
+      /\(enhanced\)|\(premium\)|\(neural\)|natural|siri|microsoft (aria|jenny|sonia|guy)|google.*(neural|wavenet)/i.test(v.name)
+    );
+    // Tier B: known-good named voices (macOS / Chrome / Edge defaults)
+    const tierB = voices.find((v) =>
+      v.lang.startsWith(langPrefix) &&
+      /samantha|karen|moira|tessa|allison|ava|nicky|aria|sonia|jenny|fiona|google us english|google.*(female|hindi|tamil)/i.test(v.name)
+    );
+    // Tier C: any female voice in this language
+    const tierC = voices.find((v) =>
+      v.lang.startsWith(langPrefix) && /female|woman/i.test(v.name)
+    );
+    // Tier D: any local voice in this exact lang
+    const tierD = voices.find((v) => v.lang === utter.lang && v.localService);
+    // Tier E: any voice in this lang
+    const tierE = voices.find((v) => v.lang === utter.lang);
+    // Tier F: any voice that starts with the lang prefix
+    const tierF = voices.find((v) => v.lang.startsWith(langPrefix));
+
+    const chosen = tierA || tierB || tierC || tierD || tierE || tierF;
+    if (chosen) utter.voice = chosen;
 
     currentUtter = utter;
     return new Promise<void>((resolve) => {
@@ -127,4 +177,14 @@ export function getStoredVoiceLanguage(): string {
 export function setStoredVoiceLanguage(lang: string) {
   if (typeof window === "undefined") return;
   localStorage.setItem("bm-voice-language", lang);
+}
+
+export function isVoiceMuted(): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem("bm-voice-muted") === "true";
+}
+
+export function setVoiceMuted(muted: boolean) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("bm-voice-muted", muted ? "true" : "false");
 }

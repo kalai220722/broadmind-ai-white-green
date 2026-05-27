@@ -88,7 +88,7 @@ export default function CoachBot() {
       if (autoSpeak && data.response) {
         setRobotState("talking");
         const voiceLang = getStoredVoiceLanguage();
-        const ctl = speak(reply.content, voiceLang);
+        const ctl = speak(reply.content, { language: voiceLang, style: "professional", speaker: "female" });
         ctl.promise.finally(() => setRobotState("idle"));
       } else {
         setRobotState("idle");
@@ -145,7 +145,7 @@ export default function CoachBot() {
     const last = [...messages].reverse().find((m) => m.role === "assistant");
     if (!last) return;
     setRobotState("talking");
-    const ctl = speak(last.content, getStoredVoiceLanguage());
+    const ctl = speak(last.content, { language: getStoredVoiceLanguage(), style: "professional", speaker: "female" });
     ctl.promise.finally(() => setRobotState("idle"));
   };
 
@@ -240,7 +240,7 @@ export default function CoachBot() {
                         <button
                           onClick={() => {
                             setRobotState("talking");
-                            const ctl = speak(m.content, getStoredVoiceLanguage());
+                            const ctl = speak(m.content, { language: getStoredVoiceLanguage(), style: "professional", speaker: "female" });
                             ctl.promise.finally(() => setRobotState("idle"));
                           }}
                           className="mt-2 flex items-center gap-1 text-[10px] text-slate-400 hover:text-violet-300"

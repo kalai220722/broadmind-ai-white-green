@@ -8,6 +8,7 @@ import FloatingTimer from "@/components/ui/FloatingTimer";
 import CoachBot from "@/components/ui/CoachBot";
 import CursorGlow from "@/components/ui/CursorGlow";
 import PageTransition from "@/components/ui/PageTransition";
+import ModuleNarrator from "@/components/ui/ModuleNarrator";
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   return (
@@ -16,6 +17,7 @@ export default function AppProviders({ children }: { children: ReactNode }) {
       <PageTransition>{children}</PageTransition>
       <FloatingTimer />
       <CoachBot />
+      <ModuleNarrator />
       <OnboardingModal />
       <Toaster
         position="top-right"
