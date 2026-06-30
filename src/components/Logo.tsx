@@ -24,7 +24,7 @@ export default function Logo({ size = 40, showText = true, className = "" }: Log
       </div>
       {showText && (
         <div className="flex flex-col">
-          <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">
+          <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">
             BroadMind
           </span>
           <span className="text-[10px] font-medium text-slate-400 tracking-[0.2em] uppercase -mt-1">
