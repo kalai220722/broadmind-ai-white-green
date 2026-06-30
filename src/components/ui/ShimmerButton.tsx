@@ -21,10 +21,10 @@ export default function ShimmerButton({
 }: ShimmerButtonProps) {
   const variants = {
     primary:
-      "bg-gradient-to-r from-violet-600 to-cyan-600 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40",
+      "bg-gradient-to-r from-emerald-600 to-green-500 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40",
     secondary:
-      "bg-slate-800/80 text-slate-200 border border-white/10 hover:bg-slate-700/80",
-    ghost: "bg-transparent text-slate-300 hover:bg-white/5",
+      "bg-white/80 text-emerald-900 border border-emerald-200 hover:bg-emerald-50",
+    ghost: "bg-transparent text-emerald-700 hover:bg-emerald-50",
   };
   const sizes = {
     sm: "px-3 py-1.5 text-xs",

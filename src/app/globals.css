@@ -2,31 +2,31 @@
 @import "katex/dist/katex.min.css";
 
 @theme inline {
-  --color-background: #020617;
-  --color-foreground: #e2e8f0;
+  --color-background: #f8fff9;
+  --color-foreground: #0f172a;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 :root {
-  --bg: #020617;
-  --fg: #e2e8f0;
-  --card: rgba(15, 23, 42, 0.7);
-  --border: rgba(255, 255, 255, 0.1);
-  --muted: #94a3b8;
+  --bg: #f8fff9;
+  --fg: #0f172a;
+  --card: rgba(255, 255, 255, 0.72);
+  --border: rgba(22, 163, 74, 0.16);
+  --muted: #475569;
 }
 
 html[data-theme="light"] {
-  --bg: #f5f3ff;
+  --bg: #f8fff9;
   --fg: #0f172a;
-  --card: rgba(255, 255, 255, 0.7);
-  --border: rgba(15, 23, 42, 0.08);
+  --card: rgba(255, 255, 255, 0.72);
+  --border: rgba(22, 163, 74, 0.16);
   --muted: #475569;
   color-scheme: light;
 }
 
 html[data-theme="light"] body {
-  background: linear-gradient(180deg, #fafaff 0%, #f1f5fb 60%, #ede9fe 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 55%, #dcfce7 100%);
   color: #0f172a;
 }
 
